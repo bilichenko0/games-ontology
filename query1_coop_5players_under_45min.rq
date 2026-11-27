@@ -1,0 +1,30 @@
+PREFIX bgo: <http://example.org/bgo#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?game
+       (SAMPLE(?rawTitle) AS ?gameTitle)
+       (MIN(?duration) AS ?playtimeMinutes)
+WHERE {
+    ?game a bgo:CooperativeGame ;
+          bgo:hasPlayerConfig ?playerConfig ;
+          bgo:hasPlaytimeConfig ?timeConfig .
+
+    ?playerConfig bgo:minPlayers ?minP ;
+                  bgo:maxPlayers ?maxP .
+    FILTER (?minP <= 5 && ?maxP >= 5)
+
+    ?timeConfig bgo:forPlayerCount 5 ;
+                bgo:playtimeMinutes ?duration .
+    FILTER (?duration < 45)
+
+    FILTER NOT EXISTS {
+        ?game bgo:hasMechanic ?mech .
+        ?mech rdfs:label ?mLabel .
+        FILTER (STR(?mLabel) = "Player Elimination")
+    }
+
+    OPTIONAL { ?game dc:title|rdfs:label ?rawTitle . }
+}
+GROUP BY ?game
+ORDER BY ?playtimeMinutes ?gameTitle

@@ -1,0 +1,25 @@
+PREFIX bgo: <http://example.org/bgo#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?game
+       (SAMPLE(?rawTitle) AS ?gameTitle)
+       (SAMPLE(?minP) AS ?minPlayers)
+       (SAMPLE(?maxP) AS ?maxPlayers)
+       (GROUP_CONCAT(DISTINCT ?mechName; separator=", ") AS ?mechanics)
+WHERE {
+    ?game bgo:hasPlayerConfig ?playerConfig ;
+          bgo:hasMechanic ?mechanic .
+
+    ?playerConfig bgo:minPlayers ?minP ;
+                  bgo:maxPlayers ?maxP .
+    FILTER (?minP <= 1)
+
+    ?mechanic rdfs:label ?mechLabel .
+    FILTER (STR(?mechLabel) IN ("Variable Player Powers", "Worker Placement"))
+    BIND(STR(?mechLabel) AS ?mechName)
+
+    OPTIONAL { ?game dc:title|rdfs:label ?rawTitle . }
+}
+GROUP BY ?game
+ORDER BY ?gameTitle

@@ -1,0 +1,45 @@
+PREFIX bgo: <http://example.org/bgo#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?game
+       (SAMPLE(?rawTitle) AS ?gameTitle)
+       (SAMPLE(?designerName) AS ?designer)
+       (SAMPLE(?publisherName) AS ?publisher)
+       (MIN(?duration) AS ?playtimeFor4Players)
+       (GROUP_CONCAT(DISTINCT ?catName; separator=", ") AS ?categories)
+WHERE {
+    ?game bgo:hasPlayerConfig ?pConfig ;
+          bgo:hasPlaytimeConfig ?tConfig .
+
+    { ?pConfig bgo:bestPlayers 4 . }
+    UNION
+    { ?pConfig bgo:recommendedPlayers 4 . }
+
+    ?tConfig bgo:forPlayerCount 4 ;
+             bgo:playtimeMinutes ?duration .
+    FILTER (?duration <= 90)
+
+    FILTER NOT EXISTS {
+        ?game bgo:hasMechanic ?mech .
+        ?mech rdfs:label ?mLabel .
+        FILTER (STR(?mLabel) = "Player Elimination")
+    }
+
+    OPTIONAL { ?game dc:title|rdfs:label ?rawTitle . }
+    OPTIONAL {
+        ?game dc:creator ?d .
+        ?d rdfs:label ?designerName .
+    }
+    OPTIONAL {
+        ?game dc:publisher ?pub .
+        ?pub rdfs:label ?publisherName .
+    }
+    OPTIONAL {
+        ?game bgo:hasCategory ?cat .
+        ?cat rdfs:label ?catLabel .
+        BIND(STR(?catLabel) AS ?catName)
+    }
+}
+GROUP BY ?game
+ORDER BY ?playtimeFor4Players ?gameTitle

@@ -1,0 +1,23 @@
+PREFIX bgo: <http://example.org/bgo#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?game
+       (SAMPLE(?rawTitle) AS ?gameTitle)
+       (SAMPLE(?complexity) AS ?complexityWeight)
+       (GROUP_CONCAT(DISTINCT ?catName; separator=", ") AS ?categories)
+WHERE {
+    ?game a bgo:CompetitiveGame ;
+          bgo:complexityWeight ?complexity ;
+          bgo:hasCategory ?category .
+
+    FILTER (?complexity > 3.0)
+
+    ?category rdfs:label ?catLabel .
+    FILTER (STR(?catLabel) IN ("Science Fiction", "Economic"))
+    BIND(STR(?catLabel) AS ?catName)
+
+    OPTIONAL { ?game dc:title|rdfs:label ?rawTitle . }
+}
+GROUP BY ?game
+ORDER BY DESC(?complexityWeight) ?gameTitle

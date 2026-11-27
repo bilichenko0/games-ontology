@@ -1,0 +1,302 @@
+@prefix : <http://example.org/bgo#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix bgo: <http://example.org/bgo#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@base <http://example.org/bgo#> .
+
+<http://example.org/bgo> rdf:type owl:Ontology ;
+                          dc:description "Ontology for modeling modern board games, mechanics, and player matchmaking."@en ;
+                          dc:title "Board Game Matchmaking Ontology"@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/elements/1.1/description
+dc:description rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/elements/1.1/title
+dc:title rdf:type owl:AnnotationProperty .
+
+
+###  https://schema.org/name
+schema:name rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#gYear
+xsd:gYear rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://example.org/bgo#hasCategory
+bgo:hasCategory rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf schema:genre ;
+                rdfs:domain bgo:BoardGame ;
+                rdfs:range bgo:GameCategory ;
+                rdfs:comment "The thematic genre or setting of the game."@en ;
+                rdfs:label "has category"@en .
+
+
+###  http://example.org/bgo#hasMechanic
+bgo:hasMechanic rdf:type owl:ObjectProperty ;
+                rdfs:domain bgo:BoardGame ;
+                rdfs:range bgo:GameMechanic ;
+                rdfs:comment "Links the game to its gameplay mechanic (e.g., Cooperative, Deck Building)."@en ;
+                rdfs:label "has mechanic"@en .
+
+
+###  http://example.org/bgo#hasPlayerConfig
+bgo:hasPlayerConfig rdf:type owl:ObjectProperty ;
+                    rdfs:domain bgo:BoardGame ;
+                    rdfs:range bgo:PlayerConfiguration ;
+                    rdfs:comment "Links the game to an n-ary node representing player counts (strict limits and recommendations)."@en ;
+                    rdfs:label "has player configuration"@en .
+
+
+###  http://example.org/bgo#hasPlaytimeConfig
+bgo:hasPlaytimeConfig rdf:type owl:ObjectProperty ;
+                      rdfs:domain bgo:BoardGame ;
+                      rdfs:range bgo:PlaytimeConfiguration ;
+                      rdfs:comment "Links the game to an n-ary node representing scalable playtime."@en ;
+                      rdfs:label "has playtime configuration"@en .
+
+
+###  http://purl.org/dc/elements/1.1/creator
+dc:creator rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf schema:author ;
+           rdfs:domain bgo:BoardGame ;
+           rdfs:range schema:Person .
+
+
+###  http://purl.org/dc/elements/1.1/publisher
+dc:publisher rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf schema:publisher ;
+             rdfs:domain bgo:BoardGame ;
+             rdfs:range schema:Organization .
+
+
+###  https://schema.org/author
+schema:author rdf:type owl:ObjectProperty .
+
+
+###  https://schema.org/genre
+schema:genre rdf:type owl:ObjectProperty .
+
+
+###  https://schema.org/publisher
+schema:publisher rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://example.org/bgo#bestPlayers
+bgo:bestPlayers rdf:type owl:DatatypeProperty ;
+                rdfs:domain bgo:PlayerConfiguration ;
+                rdfs:range xsd:integer ;
+                rdfs:comment "Best player count determined by community vote."@en ;
+                rdfs:label "best player count"@en .
+
+
+###  http://example.org/bgo#bggId
+bgo:bggId rdf:type owl:DatatypeProperty ;
+          rdfs:domain bgo:BoardGame ;
+          rdfs:range xsd:integer ;
+          rdfs:label "BGG identifier"@en .
+
+
+###  http://example.org/bgo#complexityWeight
+bgo:complexityWeight rdf:type owl:DatatypeProperty ;
+                     rdfs:domain bgo:BoardGame ;
+                     rdfs:range xsd:decimal ;
+                     rdfs:comment "Average weight/complexity rating on BGG (from 1.0 to 5.0)."@en ;
+                     rdfs:label "complexity weight"@en .
+
+
+###  http://example.org/bgo#forPlayerCount
+bgo:forPlayerCount rdf:type owl:DatatypeProperty ;
+                   rdfs:domain bgo:PlaytimeConfiguration ;
+                   rdfs:range xsd:integer ;
+                   rdfs:comment "Number of participants for which the playtime is estimated."@en ;
+                   rdfs:label "for player count"@en .
+
+
+###  http://example.org/bgo#maxPlayers
+bgo:maxPlayers rdf:type owl:DatatypeProperty ;
+               rdfs:domain bgo:PlayerConfiguration ;
+               rdfs:range xsd:integer ;
+               rdfs:comment "Strict physical maximum number of players according to the rules."@en ;
+               rdfs:label "maximum players"@en .
+
+
+###  http://example.org/bgo#minAge
+bgo:minAge rdf:type owl:DatatypeProperty ;
+           rdfs:domain bgo:BoardGame ;
+           rdfs:range xsd:integer ;
+           rdfs:label "minimum age"@en .
+
+
+###  http://example.org/bgo#minPlayers
+bgo:minPlayers rdf:type owl:DatatypeProperty ;
+               rdfs:domain bgo:PlayerConfiguration ;
+               rdfs:range xsd:integer ;
+               rdfs:comment "Strict physical minimum number of players according to the rules."@en ;
+               rdfs:label "minimum players"@en .
+
+
+###  http://example.org/bgo#playtimeMinutes
+bgo:playtimeMinutes rdf:type owl:DatatypeProperty ;
+                    rdfs:domain bgo:PlaytimeConfiguration ;
+                    rdfs:range xsd:integer ;
+                    rdfs:comment "Estimated playtime in minutes for the specified player count."@en ;
+                    rdfs:label "playtime in minutes"@en .
+
+
+###  http://example.org/bgo#recommendedPlayers
+bgo:recommendedPlayers rdf:type owl:DatatypeProperty ;
+                       rdfs:domain bgo:PlayerConfiguration ;
+                       rdfs:range xsd:integer ;
+                       rdfs:comment "Player count recommended by the BGG community (can take multiple values)."@en ;
+                       rdfs:label "recommended player count"@en .
+
+
+###  http://example.org/bgo#yearPublished
+bgo:yearPublished rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf schema:datePublished ;
+                  rdfs:domain bgo:BoardGame ;
+                  rdfs:range xsd:gYear ;
+                  rdfs:label "year published"@en .
+
+
+
+
+###  https://schema.org/datePublished
+schema:datePublished rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://example.org/bgo#BoardGame
+bgo:BoardGame rdf:type owl:Class ;
+              rdfs:subClassOf schema:Game ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty bgo:hasMechanic ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                owl:onClass bgo:GameMechanic
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty bgo:hasPlaytimeConfig ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                owl:onClass bgo:PlaytimeConfiguration
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty dc:publisher ;
+                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                owl:onClass schema:Organization
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty bgo:hasPlayerConfig ;
+                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                owl:onClass bgo:PlayerConfiguration
+                              ] ;
+              rdfs:label "Board Game"@en .
+
+
+###  http://example.org/bgo#CompetitiveGame
+bgo:CompetitiveGame rdf:type owl:Class ;
+                    rdfs:subClassOf bgo:BoardGame ;
+                    owl:disjointWith bgo:CooperativeGame ;
+                    rdfs:comment "A board game where players compete against each other to win individually."@en ;
+                    rdfs:label "Competitive Game"@en .
+
+
+###  http://example.org/bgo#CooperativeGame
+bgo:CooperativeGame rdf:type owl:Class ;
+                    rdfs:subClassOf bgo:BoardGame ;
+                    rdfs:comment "A board game where players coordinate actions to achieve a shared objective."@en ;
+                    rdfs:label "Cooperative Game"@en .
+
+
+###  http://example.org/bgo#GameCategory
+bgo:GameCategory rdf:type owl:Class ;
+                 rdfs:subClassOf schema:Thing ;
+                 rdfs:comment "Thematic genre or setting (e.g. Science Fiction, Economic, Fantasy)."@en ;
+                 rdfs:label "Game Category"@en .
+
+
+###  http://example.org/bgo#GameMechanic
+bgo:GameMechanic rdf:type owl:Class ;
+                 rdfs:subClassOf schema:Thing ;
+                 rdfs:comment "A core rule or interaction mechanism (e.g. Worker Placement, Cooperative)."@en ;
+                 rdfs:label "Game Mechanic"@en .
+
+
+###  http://example.org/bgo#PlayerConfiguration
+bgo:PlayerConfiguration rdf:type owl:Class ;
+                        rdfs:subClassOf schema:Thing ;
+                        rdfs:comment "N-ary node defining strict limits and community recommended player counts."@en ;
+                        rdfs:label "Player Configuration"@en .
+
+
+###  http://example.org/bgo#PlaytimeConfiguration
+bgo:PlaytimeConfiguration rdf:type owl:Class ;
+                          rdfs:subClassOf schema:Thing ;
+                          rdfs:comment "N-ary node mapping specific participant count to estimated session duration."@en ;
+                          rdfs:label "Playtime Configuration"@en .
+
+
+###  https://schema.org/Game
+schema:Game rdf:type owl:Class ;
+            rdfs:subClassOf schema:Thing ;
+            rdfs:label "Game"@en .
+
+
+###  https://schema.org/Organization
+schema:Organization rdf:type owl:Class ;
+                    rdfs:subClassOf schema:Thing ;
+                    rdfs:label "Organization"@en .
+
+
+###  https://schema.org/Person
+schema:Person rdf:type owl:Class ;
+              rdfs:subClassOf schema:Thing ;
+              rdfs:label "Person"@en .
+
+
+###  https://schema.org/Thing
+schema:Thing rdf:type owl:Class .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( bgo:GameCategory
+                bgo:GameMechanic
+                bgo:PlayerConfiguration
+                bgo:PlaytimeConfiguration
+                schema:Game
+                schema:Organization
+                schema:Person
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
